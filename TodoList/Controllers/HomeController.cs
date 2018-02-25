@@ -1,37 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DataAccess.Entities;
 using TodoList.Models;
+using Services;
+using System.Linq;
+using System;
 
-namespace TodoList.Controllers
+namespace TodoList.AspNetCoreMVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ITodoViewModel _model;
+        private readonly ITodoService _service;
+
+        public HomeController( ITodoService service, ITodoViewModel model)
         {
-            return View();
+            _service = service;
+            _model = model;
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> List(int? id = 1)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            ViewBag.Pages = await _service.GetPageNumber();
+            ViewBag.CurrentPage = id;
+            _model.List = await _service.GetData(id.GetValueOrDefault());
+            if (TempData["errorMsg"] != null)
+            {
+                ViewData["errorMsg"] = TempData["errorMsg"];
+            }
+            return View(_model);
         }
 
-        public IActionResult Contact()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("TodoId,Description,IsDone")] Todo todo)
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            if (ModelState.IsValid)
+            {
+                await _service.Create(todo);
+                return RedirectToAction(nameof(List));
+            }
+            var errors =ModelState.Values.SelectMany(x => x.Errors);
+            string err = String.Empty;
+            foreach(var e in errors)
+            {
+                err += e.ErrorMessage;
+            }
+            TempData["errorMsg"] = err;
+            return RedirectToAction(nameof(List));
         }
 
-        public IActionResult Error()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit( string submitButton, [Bind("TodoId,Description,IsDone")] Todo todo)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            switch(submitButton)
+            {
+                case "Save":
+                    {
+                        return await Update(todo);
+                    }
+                case "Delete":
+                    {
+                        return await Delete(todo.TodoId);
+                    }
+                default:
+                    {
+                        return RedirectToAction(nameof(List));
+                    }
+            }
+        }
+
+        private async Task<IActionResult> Update(Todo todo)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _service.Update(todo);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TodoExists(todo.TodoId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return Redirect(HttpContext.Request.Headers["Referer"]);
+            }
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        private async Task<IActionResult> Delete(int id)
+        {
+            await _service.Delete(id);
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        private bool TodoExists(int id)
+        {
+            return _service.GetById(id) != null;
         }
     }
 }
