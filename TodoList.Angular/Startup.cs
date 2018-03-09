@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DataAccess;
-using DataAccess.Repositories;
 using Services;
-using TodoList.Models;
+using DataAccess.Repositories;
 
-namespace TodoList
+namespace TodoList.Angular
 {
     public class Startup
     {
@@ -29,22 +29,23 @@ namespace TodoList
             services.AddMvc();
 
             services.AddDbContext<TodoListContext>(options =>
-                            options.UseSqlServer(Configuration.GetConnectionString("TodoListContext"),
-                            optionsBuilder =>
-                                optionsBuilder.MigrationsAssembly("DataAccess")));
+                    options.UseSqlServer(Configuration.GetConnectionString("TodoListContext")));
+
             services.AddScoped<ITodoRepository, TodoRepository>();
             services.AddScoped<ITodoService, TodoService>();
-            services.AddScoped<ITodoViewModel, TodoViewModel>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, TodoListContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                context.Database.EnsureCreated();
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true
+                });
             }
             else
             {
@@ -57,7 +58,11 @@ namespace TodoList
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=List}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }

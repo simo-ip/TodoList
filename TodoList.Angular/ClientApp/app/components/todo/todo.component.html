@@ -1,0 +1,49 @@
+﻿<div class="add-todo-form text-center">
+    <h1>Add Todo</h1>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{errorMessage}}
+    </div>
+    <form #addNewForm="ngForm" (ngSubmit)="add(addNewForm.value)" class="form-inline" name="editForm">
+        <div *ngIf="description.invalid && description.touched" class="text-danger">
+            Task description is required.
+        </div>
+        <div class="form-group" [class.has-error]="description.invalid && description.touched">
+            <input type="text" #description="ngModel" [(ngModel)]="todo.description" name="description" required class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="submit" value="Create" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+<!--<p>Model: {{todo | json}}</p>
+<p>Angular: {{addNewForm.value | json}}</p>-->
+<hr />
+<div class="todo-list text-center">
+    <div class="alert alert-info text-center" [hidden]="todos.length > 0">
+        <h3>No Todos</h3>
+    </div>
+    <div *ngFor="let todo of todos">
+        <form #updateDeleteForm="ngForm" (ngSubmit)="update(updateDeleteForm.value)" class="form-inline" name="editForm">
+            <div class="text-danger"></div>
+
+            <input type="hidden" [ngModel]="todo.todoId" name="todoId" />
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" [ngModel]="todo.isDone" name="isDone" />
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" [ngModel]="todo.description" name="description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" name="submitButton" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+            </div>
+            <div class="form-group">
+                <button type="button" (click)="deleteTodo(updateDeleteForm.value)" name="deleteButton" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        </form>
+        <!--<p>Model: {{todo | json}}</p>
+        <p>Angular: {{updateDeleteForm.value | json}}</p>-->
+        <br />
+    </div>
+</div>
