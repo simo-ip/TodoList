@@ -1,6 +1,23 @@
-@media (max-width: 767px) {
-    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+/*@media (max-width: 767px) {
     .body-content {
         padding-top: 50px;
     }
+}*/
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 50px;
+}
+
+
+.form-group {
+    text-align: center;
 }

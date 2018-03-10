@@ -1,49 +1,55 @@
-﻿<div class="add-todo-form text-center">
-    <h1>Add Todo</h1>
-    <div *ngIf="errorMessage" class="alert alert-danger">
-        {{errorMessage}}
+﻿<div class="text-center">
+    <h1>To-Do <small>List</small></h1>
+    <div *ngIf="errMsg" class="alert alert-danger" role="alert">
+        {{errMsg}}
     </div>
-    <form #addNewForm="ngForm" (ngSubmit)="add(addNewForm.value)" class="form-inline" name="editForm">
+    <form #form="ngForm" (submit)="add(form)" class="form-inline" novalidate>
         <div *ngIf="description.invalid && description.touched" class="text-danger">
-            Task description is required.
-        </div>
-        <div class="form-group" [class.has-error]="description.invalid && description.touched">
-            <input type="text" #description="ngModel" [(ngModel)]="todo.description" name="description" required class="form-control" />
+            This field is required.
         </div>
         <div class="form-group">
-            <button type="submit" value="Create" class="btn btn-primary">Add</button>
+            <input #description="ngModel" type="text" class="form-control" name="description" [(ngModel)]="model.description" placeholder="Your task" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add</button>
         </div>
     </form>
-</div>
-<!--<p>Model: {{todo | json}}</p>
-<p>Angular: {{addNewForm.value | json}}</p>-->
-<hr />
-<div class="todo-list text-center">
-    <div class="alert alert-info text-center" [hidden]="todos.length > 0">
-        <h3>No Todos</h3>
-    </div>
-    <div *ngFor="let todo of todos">
-        <form #updateDeleteForm="ngForm" (ngSubmit)="update(updateDeleteForm.value)" class="form-inline" name="editForm">
-            <div class="text-danger"></div>
+    <!--<p>Model: {{todo | json}}</p>
+    <p>Angular: {{addNewForm.value | json}}</p>-->
+    <hr />
+    <h3 *ngIf="todos.length == 0">Loading...</h3>
+    <div *ngIf="todos.length > 0">
 
-            <input type="hidden" [ngModel]="todo.todoId" name="todoId" />
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" [ngModel]="todo.isDone" name="isDone" />
+        <div *ngFor="let todo of todos">
+            <form #form="ngForm" class="form-inline" novalidate>
+                <div *ngIf="description.invalid && description.touched" class="text-danger">
+                    This field is required.
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="text" [ngModel]="todo.description" name="description" class="form-control" />
-            </div>
-            <div class="form-group">
-                <button type="submit" name="submitButton" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-            </div>
-            <div class="form-group">
-                <button type="button" (click)="deleteTodo(updateDeleteForm.value)" name="deleteButton" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        </form>
-        <!--<p>Model: {{todo | json}}</p>
-        <p>Angular: {{updateDeleteForm.value | json}}</p>-->
-        <br />
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="todoId" [(ngModel)]="todo.todoId">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox checkbox-inline">
+                        <input type="checkbox" name="isDone" [(ngModel)]="todo.isDone" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input #description="ngModel" type="text" class="form-control" name="description" [(ngModel)]="todo.description" required>
+                </div>
+                <div class="form-group">
+                    <button type="button" (click)="update(form)" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+                    <button type="button" (click)="delete(form)" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </form>
+
+            <br />
+        </div>
     </div>
+    <ul class="pagination">
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+    </ul>
 </div>

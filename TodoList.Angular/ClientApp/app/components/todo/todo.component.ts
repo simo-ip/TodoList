@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Form } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import 'rxjs/add/operator/map';
 import { TodoService } from './../../services/todo.service';
 import { Todo } from "../../models/Todo";
@@ -8,121 +8,73 @@ import { Todo } from "../../models/Todo";
 @Component({
     moduleId: "module.id",
     selector: 'todo',
-    templateUrl: 'todo.component.html'
+    templateUrl: './todo.component.html'
 })
 export class TodoComponent implements OnInit {
-    todo: Todo;
     todos: Todo[];
-    errorMessage: string;
+    model: Todo;
+    errMsg: string;
+    totalPages: number;
+    currentPage: number;
 
     constructor(private _todoService: TodoService) {
-        //this.todo.description = 'test 1';
+
     }
 
     ngOnInit() {
-        this.todo = {
-            todoId: 0,
-            description: '',
-            isDone: false
-        };
-
         this.todos = [];
+        this.model = {
+            description: '',
+            isDone: false,
+            todoId: 0
+        };
         this._todoService.getTodos()
             .map(res => res.json())
-            .subscribe(todos => this.todos = todos);
+            .subscribe(todos => this.todos = todos, err => this.errMsg = err);
 
     }
 
-    add(model: Todo) {
-        console.log('form submitted');
-        console.log(model);
+    add(form: NgForm) {
+        if (form.invalid)
+            return;
 
-        this._todoService.saveTodo(model)
-            .subscribe(success => {
-                this.todos.unshift(model);
-                this.todos.pop();
-                this.todo.description = '';
-            }, error => this.errorMessage = error);
-    };
-
-    update(model: Todo) {
-        console.log('form submitted');
-        console.log(model);
-
-        this._todoService.updateTodo(model)
-            .subscribe(success => {
-
-            }, error => this.errorMessage = error);
-    };
-
-    //addTodo($event: any, todoText: any) {
-    //    if ($event.which === 1) {
-    //        var result;
-    //        var newTodo = {
-    //            text: todoText.value,
-    //            isCompleted: false,
-    //            id: undefined
-    //        };
-
-    //        result = this._todoService.saveTodo(newTodo);
-    //        result.subscribe(x => {
-    //            this.todos.push(newTodo)
-    //            todoText.value = '';
-    //        });
-    //    }
-    //}
-
-    setEditState(todo : any, state : any) {
-        if (state) {
-            todo.isEditMode = state;
-        } else {
-            delete todo.isEditMode;
-        }
+        this._todoService.add(this.model)
+            .subscribe(
+            data => {
+                this.todos.unshift(data.json()),
+                    this.model.description = ''
+                form.resetForm();
+            },
+            err => this.errMsg = err
+            );
     }
 
-    updateTodoText($event: any, todo: any) {
-        if ($event.which === 13) {
-            todo.text = $event.target.value;
-            var _todo = {
-                _id: todo.id,
-                text: todo.text,
-                isCompleted: todo.isCompleted
-            };
 
-            this._todoService.updateTodo(_todo)
-                .subscribe(data => {
-                    this.setEditState(todo, false)
-                });
-        }
+    update(form: NgForm) {
+        if (form.invalid)
+            return;
+
+        this._todoService.updateTodo(form.value)
+            .subscribe(
+            data => console.log('success: ', data),
+            err => this.errMsg = err
+            );
     }
 
-    updateStatus(todo : any) {
-        console.log(todo.id);
-        var _todo = {
-            _id: todo.id,
-            text: todo.text,
-            isCompleted: !todo.isCompleted
-        };
-
-        this._todoService.updateTodo(_todo)
-            .subscribe(data => {
-                todo.isCompleted = !todo.isCompleted;
-            });
-    }
-
-    deleteTodo(todo : any) {
+    delete(form: NgForm) {
         var todos = this.todos;
-        debugger;
-        this._todoService.deleteTodo(todo.todoId)
-            .subscribe(data => {
+        var todoId = form.value.todoId;
 
+        this._todoService.deleteTodo(todoId)
+            .subscribe(
+            data => {
                 for (var i = 0; i < this.todos.length; i++) {
-                    if (this.todos[i].todoId == todo.todoId) {
+                    if (this.todos[i].todoId == todoId) {
                         todos.splice(i, 1);
                     }
                 }
-
-            });
+            }, err => this.errMsg = err
+            );
     }
 
 }
