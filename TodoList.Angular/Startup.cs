@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using Services;
 using DataAccess.Repositories;
+using TodoList.Angular.ViewModels;
 
 namespace TodoList.Angular
 {
@@ -31,6 +32,7 @@ namespace TodoList.Angular
             services.AddDbContext<TodoListContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TodoListContext")));
 
+            services.AddScoped<ITodoViewModel, TodoViewModel>();
             services.AddScoped<ITodoRepository, TodoRepository>();
             services.AddScoped<ITodoService, TodoService>();
 

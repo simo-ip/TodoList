@@ -1,5 +1,6 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnChanges } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { TodoService } from './../../services/todo.service';
 import { Todo } from "../../models/Todo";
@@ -10,14 +11,16 @@ import { Todo } from "../../models/Todo";
     selector: 'todo',
     templateUrl: './todo.component.html'
 })
-export class TodoComponent implements OnInit {
+export class TodoComponent implements OnInit, OnChanges {
     todos: Todo[];
     model: Todo;
     errMsg: string;
     totalPages: number;
+    pages: any;
     currentPage: number;
 
-    constructor(private _todoService: TodoService) {
+    constructor(private _todoService: TodoService,
+        private _route: ActivatedRoute) {
 
     }
 
@@ -28,10 +31,40 @@ export class TodoComponent implements OnInit {
             isDone: false,
             todoId: 0
         };
-        this._todoService.getTodos()
-            .map(res => res.json())
-            .subscribe(todos => this.todos = todos, err => this.errMsg = err);
+        
 
+        //var id = this._route.snapshot.paramMap.get('id');
+        //console.log(id);
+
+        this._route.url.subscribe(url => {
+            var id = this._route.snapshot.paramMap.get('id');
+            console.log(id);
+            if (id) {
+                this.currentPage = Number(id)
+            };
+
+            this._todoService.getTodos(this.currentPage)
+                .map(res => res.json())
+                .subscribe(data => {
+                
+                    this.totalPages = data.pages;
+                    this.todos = data.todoList;
+
+                    console.log('totalPages'+this.totalPages);
+                    this.pages = new Array(this.totalPages);
+                    console.log('pages'+this.pages);
+
+                }, err => this.errMsg = err);
+
+        });
+
+        
+
+    }
+
+    ngOnChanges() {
+        var id = this._route.snapshot.paramMap.get('id');
+        console.log(id);
     }
 
     add(form: NgForm) {

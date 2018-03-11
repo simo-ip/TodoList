@@ -33,7 +33,8 @@ import { TodoService } from './services/todo.service';
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
-            { path: 'todo', component: TodoComponent },
+            { path: 'todo/:id', component: TodoComponent },
+            { path: 'todo', redirectTo: 'todo/1', pathMatch: 'full' },
             { path: '**', redirectTo: 'home' }
         ])
     ]

@@ -45,11 +45,24 @@
             <br />
         </div>
     </div>
+
     <ul class="pagination">
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
+        <li class="page-item" [ngClass]="{'disabled':currentPage == 1 }">
+            <a *ngIf="currentPage > 1" [routerLink]="['/todo', currentPage - 1]" class="page-link">
+                Previous
+            </a>
+            <span *ngIf="currentPage == 1" class="page-link">Previous</span>
+        </li>
+        <li *ngFor="let a of pages; let index = index" [ngClass]="{'active': currentPage == index + 1 }" class="page-item">
+            <a [routerLink]="['/todo', index + 1]" class="page-link">
+                {{ index + 1 }}
+            </a>
+        </li>
+        <li class="page-item" [ngClass]="{'disabled': currentPage == totalPages }">
+            <a *ngIf="currentPage < totalPages" [routerLink]="['/todo', currentPage + 1]" class="page-link">
+                Next
+            </a>
+            <span *ngIf="currentPage == totalPages" class="page-link">Next</span>
+        </li>
     </ul>
 </div>

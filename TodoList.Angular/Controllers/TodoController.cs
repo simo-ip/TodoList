@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Entities;
 
 using Services;
+using TodoList.Angular.ViewModels;
 
 namespace TodoList.Angular.Controllers
 {
@@ -16,37 +17,22 @@ namespace TodoList.Angular.Controllers
     public class TodoController : Controller
     {
         private readonly ITodoService _service;
+        private readonly ITodoViewModel _model;
 
-        public TodoController( ITodoService service)
+        public TodoController( ITodoService service, ITodoViewModel model)
         {
             _service = service;
+            _model = model;
         }
 
         // GET: api/Todo
         [HttpGet("{id}")]
-        public async Task<IEnumerable<Todo>> GetTodo([FromRoute] int id = 1)
+        public async Task<ITodoViewModel> GetTodo([FromRoute] int id = 1)
         {
-            return await _service.GetData(id);
+            _model.Pages = await _service.GetPageNumber();
+            _model.TodoList = await _service.GetData(id);
+            return _model;
         }
-
-        // GET: api/Todo/5
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetTodo([FromRoute] int id)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //
-        //    var todo = await _context.Todo.SingleOrDefaultAsync(m => m.TodoId == id);
-        //
-        //    if (todo == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //
-        //    return Ok(todo);
-        //}
 
         // PUT: api/Todo/5
         [HttpPut("{id}")]

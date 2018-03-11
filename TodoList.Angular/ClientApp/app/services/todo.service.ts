@@ -8,8 +8,8 @@ export class TodoService {
     constructor(public _http: Http) {
         
     }
-    getTodos() {
-        return this._http.get('/api/todo/1');
+    getTodos(page: number) {
+        return this._http.get('/api/todo/' + page);
     }
 
     add(todo: Todo) {
