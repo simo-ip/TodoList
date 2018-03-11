@@ -7,19 +7,19 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 import { TodoComponent } from './components/todo/todo.component';
 import { TodoService } from './services/todo.service';
+import { AboutComponent } from './components/about/about.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
         HomeComponent,
-        TodoComponent
+        TodoComponent,
+        AboutComponent,
+        ContactComponent
     ],
     providers: [
         TodoService
@@ -31,8 +31,8 @@ import { TodoService } from './services/todo.service';
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
+            { path: 'about', component: AboutComponent },
+            { path: 'contact', component: ContactComponent },
             { path: 'todo/:id', component: TodoComponent },
             { path: 'todo', redirectTo: 'todo/1', pathMatch: 'full' },
             { path: '**', redirectTo: 'home' }

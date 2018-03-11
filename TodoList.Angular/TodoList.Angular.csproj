@@ -18,16 +18,29 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Compile Remove="ClientApp\dist\**" />
     <Compile Remove="Data\**" />
     <Content Remove="ClientApp\**" />
     <Content Remove="Data\**" />
+    <EmbeddedResource Remove="ClientApp\dist\**" />
     <EmbeddedResource Remove="Data\**" />
+    <None Remove="ClientApp\dist\**" />
     <None Remove="Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\app\components\about\about.component.ts" />
+    <None Remove="ClientApp\app\components\contact\contact.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\about\about.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\contact\contact.component.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
