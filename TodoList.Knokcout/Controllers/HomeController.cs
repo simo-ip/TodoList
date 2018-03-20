@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace temp.Controllers
+namespace TodoList.Knockout.Controllers
 {
     public class HomeController : Controller
     {

@@ -27,6 +27,11 @@
                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
                     </a>
                 </li>
+                <li>
+                    <a data-bind='attr: { href: router.link("/todo/1") }, css: { active: route().page === "todo-list" }'>
+                        <span class='glyphicon glyphicon-th-list'></span> Todo list
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

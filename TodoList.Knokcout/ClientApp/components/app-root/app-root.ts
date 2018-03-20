@@ -7,7 +7,8 @@ import navMenu from '../nav-menu/nav-menu';
 const routes: Route[] = [
     { url: '',              params: { page: 'home-page' } },
     { url: 'counter',       params: { page: 'counter-example' } },
-    { url: 'fetch-data',    params: { page: 'fetch-data' } }
+    { url: 'fetch-data',    params: { page: 'fetch-data' } },
+    { url: 'todo/{:id}',          params: { page: 'todo-list' } }
 ];
 
 class AppRootViewModel {
@@ -27,6 +28,7 @@ class AppRootViewModel {
         ko.components.register('home-page', require('bundle-loader?lazy!../home-page/home-page'));
         ko.components.register('counter-example', require('bundle-loader?lazy!../counter-example/counter-example'));
         ko.components.register('fetch-data', require('bundle-loader?lazy!../fetch-data/fetch-data'));
+        ko.components.register('todo-list', require('bundle-loader?lazy!../todo-list/todo-list'));
     }
 
     // To support hot module replacement, this method unregisters the router and KO components.

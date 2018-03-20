@@ -19,3 +19,4 @@ class NavMenuViewModel {
 }
 
 export default { viewModel: NavMenuViewModel, template: require('./nav-menu.html') };
+

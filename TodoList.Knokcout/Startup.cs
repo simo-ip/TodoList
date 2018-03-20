@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using DataAccess;
+using Services;
+using DataAccess.Repositories;
+using Microsoft.EntityFrameworkCore;
+using TodoList.Knockout.ViewModels;
 
 namespace temp
 {
@@ -23,6 +28,13 @@ namespace temp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddDbContext<TodoListContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("TodoListContext")));
+
+            services.AddScoped<ITodoViewModel, TodoViewModel>();
+            services.AddScoped<ITodoRepository, TodoRepository>();
+            services.AddScoped<ITodoService, TodoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
