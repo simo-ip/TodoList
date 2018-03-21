@@ -19,11 +19,17 @@ interface TodoModel {
     todoList: TodoItem[]
 }
 
+interface Pagination {
+    url: string,
+    caption: string
+}
+
 class TodoListViewModel {
-    public that = this;
-    public description = ko.observable();
     public totalPages: number;
     private currentPage: number;
+    private pages = ko.observableArray<Pagination>(); 
+
+    public description = ko.observable();
     public todoList = ko.observableArray<TodoItem>();
     public todoItem: TodoItem;
 
@@ -32,56 +38,55 @@ class TodoListViewModel {
         this.getData();
     }
 
-    public doSomething(e:any) {
-        console.log(this.description());
-        return false;
+    renderPages() {
+        //console.log('renderPages' + this.totalPages);
+        this.pages([]);
+        for (var i = 1; i < this.totalPages+1; i++) {
+            this.pages.push({
+                url: '/todo/' + i,
+                caption: i.toString()
+            })
+            console.log('renderPages'+i)
+        }
     }
 
-
-
-    public handleCreate() {
+    handleCreate() {
         this.postData('api/todo/', { description: this.description() })
             .then((data: any) => {
-                console.log(data)
                 this.getData();
-            }) // JSON from `response.json()` call
+                this.description('');
+            })
             .catch((error:any) => console.error(error))
 
         return false;
     }
 
-    public handleUpdate(todo: TodoItem) {
-        var url = 'api/todo/' + todo.todoId;
-        var data = todo;
-
-        fetch(url, {
-            method: 'PUT', // or 'POST'
-            body: JSON.stringify(data),
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        }).then(res => res.json())
+    handleUpdate(todo: TodoItem) {
+        let url = 'api/todo/' + todo.todoId;
+        let data = todo;
+        this.updateData(url, todo)
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response));
+            .then(response => console.log('Success:', response));;        
     }
 
-    public handleDelete(todo: TodoItem) {
-        return fetch('api/todo/' + todo.todoId, {
-            method: 'delete'
-        })
-        .then(response => response.json());
+    handleDelete(todo: TodoItem) {
+        this.deleteData(todo)
+            .then(response => {
+                this.getData();
+            }).catch(error => console.error('Error:', error));;
     }
 
-    public getData() {
+    getData() {
         fetch('api/todo/' + this.currentPage)
             .then(response => response.json() as Promise<TodoModel>)
             .then(data => {
                 this.totalPages = data.pages;
-                this.todoList(data.todoList)
+                this.todoList(data.todoList);
+                this.renderPages();
             });
     }
 
-    public postData(url:string, data:any) {
+    postData(url:string, data:any) {
     // Default options are marked with *
     return fetch(url, {
             body: JSON.stringify(data), // must match 'Content-Type' header
@@ -98,7 +103,30 @@ class TodoListViewModel {
         })
         .then(response => response.json()) // parses response to JSON
     }
-    
+
+    updateData(url: string, data: any) {
+
+        return fetch(url, {
+            body: JSON.stringify(data), // must match 'Content-Type' header
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json'
+            },
+            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            redirect: 'follow', // *manual, follow, error
+            referrer: 'no-referrer', // *client, no-referrer
+        })
+            .then(response => response)
+    }
+
+    deleteData(todo: TodoItem) {
+        return fetch('api/todo/' + todo.todoId, {
+            method: 'delete'
+        }).then(response => response);
+    }
 }
 
 export default { viewModel: TodoListViewModel, template: require('./todo-list.html') };

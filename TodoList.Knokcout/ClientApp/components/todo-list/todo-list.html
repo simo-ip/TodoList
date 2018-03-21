@@ -39,8 +39,8 @@
                     <input #description="ngModel" type="text" class="form-control" name="description" data-bind='value: description' required>
                 </div>
                 <div class="form-group">
-                    <button type="button" data-bind="click: $component.handleUpdate" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-                    <button type="button" data-bind="click: $component.handleDelete" class="btn btn-danger" title="Delete">
+                    <button type="button" data-bind="click: $component.handleUpdate.bind($component)" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+                    <button type="button" data-bind="click: $component.handleDelete.bind($component)" class="btn btn-danger" title="Delete">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
@@ -49,9 +49,7 @@
             <br />
         </div>
     </div>
-    <ul class="pagination">
-        <li><a href="/todo/1">1</a></li>
-        <li><a href="/todo/2">2</a></li>
-        <li><a href="/todo/3">3</a></li>
+    <ul data-bind="foreach: pages" class="pagination">
+        <li ><a data-bind="attr: { href: url, title: caption }"><span data-bind="text: caption"></span></a></li>
     </ul>
 </div>
