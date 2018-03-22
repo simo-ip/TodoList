@@ -16,6 +16,7 @@ interface TodoModel {
 }
 
 interface Pagination {
+    page: number,
     url: string,
     caption: string
 }
@@ -51,6 +52,7 @@ class TodoListViewModel {
         this.pages([]);
         for (var i = 1; i < this.totalPages+1; i++) {
             this.pages.push({
+                page: i,
                 url: '/todo/' + i,
                 caption: i.toString()
             })

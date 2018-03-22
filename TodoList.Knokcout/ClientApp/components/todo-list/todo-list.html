@@ -50,6 +50,8 @@
         </div>
     </div>
     <ul data-bind="foreach: pages" class="pagination">
-        <li ><a data-bind="attr: { href: url, title: caption }"><span data-bind="text: caption"></span></a></li>
+        <li data-bind="if:page===1"><a data-bind="attr: { href: url, title: 'First page' }"><span data-bind="text: 'First page'"></span></a></li>
+        <li data-bind="css:{active: page == $component.currentPage}" ><a data-bind="attr: { href: url, title: caption }"><span data-bind="text: caption"></span></a></li>
+        <li data-bind="if:page===$component.totalPages"><a data-bind="attr: { href: url, title: 'Last page' }"><span data-bind="text: 'Last page'"></span></a></li>
     </ul>
 </div>

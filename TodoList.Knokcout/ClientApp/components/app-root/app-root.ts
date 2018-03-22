@@ -6,8 +6,8 @@ import navMenu from '../nav-menu/nav-menu';
 // Declare the client-side routing configuration
 const routes: Route[] = [
     { url: '',              params: { page: 'home-page' } },
-    { url: 'counter',       params: { page: 'counter-example' } },
-    { url: 'fetch-data',    params: { page: 'fetch-data' } },
+    { url: 'about',       params: { page: 'about' } },
+    { url: 'contact',    params: { page: 'contact' } },
     { url: 'todo/{:id}',          params: { page: 'todo-list' } }
 ];
 
@@ -26,8 +26,8 @@ class AppRootViewModel {
         // For docs, see https://github.com/webpack/bundle-loader
         ko.components.register('nav-menu', navMenu);
         ko.components.register('home-page', require('bundle-loader?lazy!../home-page/home-page'));
-        ko.components.register('counter-example', require('bundle-loader?lazy!../counter-example/counter-example'));
-        ko.components.register('fetch-data', require('bundle-loader?lazy!../fetch-data/fetch-data'));
+        ko.components.register('about', require('bundle-loader?lazy!../about/about'));
+        ko.components.register('contact', require('bundle-loader?lazy!../contact/contact'));
         ko.components.register('todo-list', require('bundle-loader?lazy!../todo-list/todo-list'));
     }
 

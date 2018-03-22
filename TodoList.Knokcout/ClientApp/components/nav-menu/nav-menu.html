@@ -1,5 +1,5 @@
-<div class='main-nav'>
-        <div class='navbar navbar-inverse'>
+<div class='navbar navbar-inverse navbar-fixed-top'>
+    <div class="container">
         <div class='navbar-header'>
             <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
                 <span class='sr-only'>Toggle navigation</span>
@@ -7,9 +7,9 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' href='/'>temp</a>
+            <a class='navbar-brand' href='/'>Todo list</a>
         </div>
-        <div class='clearfix'></div>
+       
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
                 <li>
@@ -18,13 +18,13 @@
                     </a>
                 </li>
                 <li>
-                    <a data-bind='attr: { href: router.link("/counter") }, css: { active: route().page === "counter-example" }'>
-                        <span class='glyphicon glyphicon-education'></span> Counter
+                    <a data-bind='attr: { href: router.link("/about") }, css: { active: route().page === "about" }'>
+                        <span class='glyphicon glyphicon-education'></span> About
                     </a>
                 </li>
                 <li>
-                    <a data-bind='attr: { href: router.link("/fetch-data") }, css: { active: route().page === "fetch-data" }'>
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                    <a data-bind='attr: { href: router.link("/contact") }, css: { active: route().page === "contact" }'>
+                        <span class='glyphicon glyphicon-th-list'></span> Contact
                     </a>
                 </li>
                 <li>
