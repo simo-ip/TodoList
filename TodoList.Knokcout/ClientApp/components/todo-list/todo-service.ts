@@ -26,15 +26,7 @@ export class TodoService {
             mode: 'cors', // no-cors, cors, *same-origin
             redirect: 'follow', // *manual, follow, error
             referrer: 'no-referrer', // *client, no-referrer
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-                console.log('Success:', response);
-                return response.json();
-            })
-            .catch(error => console.log('Error:', error));
+        }).then(responce => responce);            
     }
 
     updateData(data: TodoItem) {

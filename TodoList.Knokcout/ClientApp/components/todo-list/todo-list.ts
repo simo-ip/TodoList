@@ -26,11 +26,13 @@ class TodoListViewModel {
     private currentPage: number;
     private pages = ko.observableArray<Pagination>(); 
 
-    private description = ko.observable();
+    private description = ko.observable().extend({required: "" });
     private todoList = ko.observableArray<TodoItem>();
-    private todoItem: TodoItem;
+    //private todoItem: TodoItem;
 
     private service: TodoService;
+    private errMsg = ko.observable();
+    private shouldShowMessage = ko.observable(false);
 
     constructor(params: NavParams) {
         this.currentPage = params.id;
@@ -39,6 +41,7 @@ class TodoListViewModel {
     }
 
     loadData() {
+        this.shouldShowMessage(false);
         this.service.getData(this.currentPage)
             .then(response => response.json() as Promise<TodoModel>)
             .then(data => {
@@ -61,11 +64,24 @@ class TodoListViewModel {
 
     handleCreate() {
         this.service.postData('api/todo/', { description: this.description() })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                console.log('Success:', response);
+                return response.json();
+            })
+            .catch(error => {
+                console.log('Error:', error)
+                this.errMsg(error);
+                this.shouldShowMessage(true);
+            })
             .then(data => {
-                console.log('data:', data)
-                this.loadData();
-                this.description('');
-
+                if (data) {
+                    console.log('data:', data)
+                    this.loadData();
+                    this.description('');
+                }
             })
         return false;
     }
