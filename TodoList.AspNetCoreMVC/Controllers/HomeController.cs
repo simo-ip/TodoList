@@ -6,6 +6,7 @@ using TodoList.Models;
 using Services;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 namespace TodoList.AspNetCoreMVC.Controllers
 {
@@ -102,6 +103,11 @@ namespace TodoList.AspNetCoreMVC.Controllers
         {
             await _service.Delete(id);
             return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         private bool TodoExists(int id)
