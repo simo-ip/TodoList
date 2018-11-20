@@ -1,0 +1,57 @@
+﻿<div class="text-center">
+    <h1>To-Do <small>List</small></h1>
+    <div data-bind="visible: shouldShowMessage" class="alert alert-danger" role="alert">
+        <p data-bind='text: errMsg'></p>
+    </div>
+    <form class="form-inline" data-bind="submit: handleCreate" method="post" novalidate>
+        <div class="hidden text-danger">
+            This field is required.
+        </div>
+        <div class="form-group">
+            <input type="text" data-bind='value: description' class="form-control" name="description" placeholder="Your task" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+    <!--
+    <p data-bind='text: errMsg'></p>
+    -->
+    <hr />
+
+    <h3 data-bind='ifnot: todoList'>Loading...</h3>
+    <div data-bind='if: todoList'>
+
+        <div data-bind='foreach: todoList'>
+            <form #form="ngForm" class="form-inline" novalidate>
+                <div class="text-danger hidden">
+                    This field is required.
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="todoId" data-bind='value: todoId'>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox checkbox-inline">
+                        <input type="checkbox" name="isDone" data-bind='checked: isDone' />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input #description="ngModel" type="text" class="form-control" name="description" data-bind='value: description' required>
+                </div>
+                <div class="form-group">
+                    <button type="button" data-bind="click: $component.handleUpdate.bind($component)" class="btn btn-success" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+                    <button type="button" data-bind="click: $component.handleDelete.bind($component)" class="btn btn-danger" title="Delete">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+            </form>
+
+            <br />
+        </div>
+    </div>
+    <ul data-bind="foreach: pages" class="pagination">
+        <li data-bind="if:page===1"><a data-bind="attr: { href: url, title: 'First page' }"><span data-bind="text: 'First page'"></span></a></li>
+        <li data-bind="css:{active: page == $component.currentPage}" ><a data-bind="attr: { href: url, title: caption }"><span data-bind="text: caption"></span></a></li>
+        <li data-bind="if:page===$component.totalPages"><a data-bind="attr: { href: url, title: 'Last page' }"><span data-bind="text: 'Last page'"></span></a></li>
+    </ul>
+</div>
