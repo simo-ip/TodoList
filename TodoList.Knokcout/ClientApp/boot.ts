@@ -1,4 +1,5 @@
 import './css/site.css';
+import 'popper.js';
 import 'bootstrap';
 import * as ko from 'knockout';
 import { createBrowserHistory } from 'history';
