@@ -1,4 +1,5 @@
 import './css/site.css';
+import 'popper.js';
 import 'bootstrap';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
